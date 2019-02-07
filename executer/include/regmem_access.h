@@ -11,6 +11,8 @@ bool init_mem (uint32_t size, uint16_t width);
 bool insert_reg_bitS (std::string reg_bitS, uint16_t regIndex);
 std::string get_reg_value (std::string reg_bitS);
 std::string get_mem_value (std::string mem_bitS);
-void show_memreg(std::string bitS); //test function
+bool insert_reg_value (std::string reg_bitS, std::string bitS);
+bool insert_mem_value (std::string mem_bitS, std::string bitS);
+//void show_memreg(std::string bitS); //test function
 
 #endif

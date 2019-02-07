@@ -163,6 +163,102 @@ string get_mem_value (string reg_bitS) {
   return mem_value;
 }
 
+/* bitStoboolA (string bitS):
+ * converts a bitstring to array of boolean 
+ * elements.
+ * returns NULL if bitstring is empty,
+ * else return boolean array such that ith 
+ * index of boolean array represents
+ * same value as ith index of bitstring.
+ */
+bool* bitStoboolA (string bitS) {
+  if (!bitS.length()) {
+    cerr << "string is empty" << endl;
+    return NULL;
+  }
+ 
+  size_t bitS_length = bitS.size(); 
+  bool *boolA = new bool[bitS_length];
+
+  for (size_t i = 0; i < bitS_length; i++) {
+    boolA[i] = bitS[i] - '0';
+  }
+
+  return boolA; 
+} 
+
+/* insert_regmem_value (store, uint64_t, string):
+ * takes a store object, index representing location
+ * of store that needs to be written, and the bitString
+ * that will be inserted.
+ * returns 0 if failed else returns 1.
+ */
+bool insert_regmem_value (store regmem, uint64_t index, string bitS) {
+  int success = 1;
+
+  bool *boolA = bitStoboolA (bitS);
+
+  if (!boolA) {
+    cerr << "insert_regmem_value: cannot convert bitstring to bool array" 
+         << endl;
+    return 0;
+  }
+   
+  success = !writeMultiBitstoStore (regmem, index, 0, boolA, bitS.size());
+ 
+  if (success != 1) {
+    cerr << "insert_regmem_value: unable to write to the store object"
+         << endl;
+    return 0;
+  }
+  
+  return success;
+}
+
+/* insert_reg_value (string reg_bitS, string bitS):
+ * inserts bitS bitstring in the register represented
+ * by reg_bitS.
+ * takes register bits representing index of the
+ * register and bitstring thats needed to be inserted.
+ * returns 0 if unsuccessful, else returns 1.
+ */
+bool insert_reg_value (string reg_bitS, string bitS) {
+  if (!reg_bitS_index_map.count (reg_bitS)) {
+    cerr << "insert_reg_value: invalid register_bitString" << endl;
+    return 0;
+  }
+
+  uint16_t reg_index = reg_bitS_index_map[reg_bitS];
+
+  bool success =  insert_regmem_value (regster, reg_index, bitS);
+
+  if (!success) {
+    cerr << "insert_reg_value: unable to insert value to regster" 
+         << reg_bitS << endl;
+  }
+
+  return success;
+}
+  
+/* insert_mem_value (string mem_bitS, string bitS):
+ * inserts bitS bitstring in the memory at 
+ * memory address represented by reg_bitS.
+ * takes register bits representing index of the
+ * register and bitstring thats needed to be inserted.
+ * returns 0 if unsuccessful, else returns 1.
+ */
+bool insert_mem_value (string mem_bitS, string bitS) {
+  uint64_t mem_index = bitS_to_num (mem_bitS);
+  bool success =  insert_regmem_value (memory, mem_index, bitS);
+
+  if (!success) {
+    cerr << "insert_mem_value: unable to insert value to memory" 
+         << mem_bitS << endl;
+  }
+
+  return success;
+}
+  
 
 /*test function:
 void show_memreg (string bitS) {
