@@ -216,6 +216,9 @@ string get_bitS_equivalent (string operand, string opcode) {
     
     bitS = opcode.substr (range.first, range.second - range.first + 1);
   }
+  else {
+    bitS = alias_to_reg_bitS (operand);
+  }
   
   return bitS;
 }
