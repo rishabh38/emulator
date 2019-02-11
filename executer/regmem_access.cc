@@ -17,6 +17,39 @@ static store regster;
 static store memory;
 
 static map<string, uint16_t> reg_bitS_index_map;
+static map<string, string> alias_reg_bitS_map;
+
+/* add_alias (string alias, string bitS): 
+ * takes alias string and bitstring, maps alias
+ * string with bitstring in alias_reg_bitS_map.
+ * gives WARNING when alias overwritten.
+ * always returns true :_>
+ */
+bool add_alias (string alias, string bitS) {
+  if (alias_reg_bitS_map.count (alias)) {
+    cerr << "WARNING: overwriting mapped register alias" << endl;
+  }
+
+  alias_reg_bitS_map.insert (make_pair (alias, bitS));
+  return 1;
+}
+
+/* string alias_to_reg_bitS (string alias)
+ * takes an alias string and retrieves equivalent bitstring
+ * from alias_reg_bitS_map.Returns empty string if 
+ * alias not found in the structure
+ */
+string alias_to_reg_bitS (string alias) {
+  string bitS = "";
+
+  if (!alias_reg_bitS_map.count(alias)) {
+    cerr << "alias_to_reg_bitS: alias " << alias << " not found"
+         << endl; }
+  else bitS = alias_reg_bitS_map[alias];
+
+  return bitS;
+}
+
 
 
 /* init_reg (uint16_t total_reg, uint16_t width):
@@ -107,17 +140,21 @@ string get_regmem_value (store regmem, uint64_t index) {
   return regmem_value;
 }
 
-/* get_reg_value (string reg_bitS):
- * takes bitstring mapped to one of the regster
+/* get_reg_value (string reg):
+ * takes bitstring/alias mapped to one of the regster
  * index, and returns the value stored in that index,
  * if unable to find the mapped index, then returns
  * " ",
  * else returns regster's stored value.
  */
-string get_reg_value (string reg_bitS) {
-  if (!reg_bitS_index_map.count (reg_bitS)) {
-    cerr << "get_reg_value: invalid register_bitString" << endl;
-    return " ";
+string get_reg_value (string reg) {
+  string reg_bitS = "";
+
+  if (alias_reg_bitS_map.count (reg)) {
+    reg_bitS = alias_to_reg_bitS (reg);
+  }
+  else if (reg_bitS_index_map.count (reg)) {
+    reg_bitS = reg;
   }
 
   uint16_t reg_index = reg_bitS_index_map[reg_bitS];
