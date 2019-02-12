@@ -4,7 +4,7 @@
 #include <cinttypes>
 #include <string>
 
-
-uint64_t bitS_to_unum (std::string); 
+uint64_t bitS_to_unum (std::string);
 std::string unum_to_bitS (uint64_t num);
+bool is_bitS (string the_string);
 #endif
