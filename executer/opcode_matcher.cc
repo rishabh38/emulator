@@ -86,3 +86,40 @@ bool insert_instruction_module (const string &str_inst_module) {
   instruction_list.insert (inst_module);
   return success;
 }
+
+bool is_substr (const string& str, pair<num_pair, string> range_string) {
+  num_pair range = range_string.first;
+  string string_to_match = range_string.second;
+  size_t str_length = str.size();
+
+  if (range.first >= str_length) {
+    return 0;
+  }
+
+  if (str.substr (range.first, range.second - range.first) != string_to_match) {
+    return 0;
+  }
+
+  return 1;
+}
+
+string_vec get_statements (const string &opcode) {
+  string_vec statements;
+  for (auto inst_module : instruction_list) {
+    bool match = true;
+    
+    for (auto range_str : inst_module.first) {
+      if (!is_substr (opcode, range_str)) {
+        match = false;
+        break;
+      }
+    }
+     
+    if (match) {
+      statements = inst_module.second;
+      break;
+    } 
+  }
+
+  return statements;
+}
