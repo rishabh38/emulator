@@ -15,7 +15,7 @@ using inst_state = pair<nump_string_map, string_vec>;
 
 static map<nump_string_map, string_vec> instruction_list;
 
-nump_string_map get_opcode_type (const string &str_opcode_t) {
+nump_string_map parse_opcode_type (const string &str_opcode_t) {
   size_t str_opcode_length = str_opcode_t.size();
   nump_string_map bitS_range_spec;
 
@@ -30,7 +30,7 @@ nump_string_map get_opcode_type (const string &str_opcode_t) {
   return bitS_range_spec;
 }
 
-vector<string> get_statements (const string &str_statements) {
+vector<string> parse_statements (const string &str_statements) {
   vector<string> vec_statement;
   size_t str_statements_length = str_statements.size();
 
@@ -45,12 +45,12 @@ vector<string> get_statements (const string &str_statements) {
   return vec_statement;
 }
 
-inst_state get_instruction_module (const string &str_inst_module) {
+inst_state parse_instruction_module (const string &str_inst_module) {
   inst_state err_return_value;
   size_t module_length = str_inst_module.size();
 
   if (!module_length) {
-    cerr << "get_instruction_module: str_instruction_module is empty"
+    cerr << "parse_instruction_module: str_instruction_module is empty"
          << endl;
     return err_return_value;
   }
@@ -61,22 +61,22 @@ inst_state get_instruction_module (const string &str_inst_module) {
     pos = module_length;
   }
 
-  nump_string_map opcode_type =
-              get_opcode_type (str_inst_module.substr (0, pos));
+  string str_opcode_type = str_inst_module.substr (0, pos);
+  trim_str (str_opcode_type);
+  nump_string_map opcode_type = parse_opcode_type (str_opcode_type);
   vector<string> statements;
 
-
   if (pos >= module_length) {
-    cerr << "get_instruction_module: no statements" << endl;
+    cerr << "parse_instruction_module: no statements" << endl;
     return make_pair(opcode_type, statements);
   }
 
-  statements = get_statements (str_inst_module.substr (pos, module_length - 1));
+  statements = parse_statements (str_inst_module.substr (pos, module_length - 1));
   return make_pair (opcode_type, statements);
 }
 
 bool insert_instruction_module (const string &str_inst_module) {
-  inst_state inst_module = get_instruction_module (str_inst_module);
+  inst_state inst_module = parse_instruction_module (str_inst_module);
   bool success = 1;
 
   if (inst_module.first.empty() || inst_module.second.empty()) {
