@@ -45,17 +45,17 @@ bool skip_char (const string &str, char skipchar, size_t &index) {
   return success;
 }
 
-pair<uint64_t, uint64_t> get_rangei (const string &rnge_string, size_t &i) {
+pair<uint64_t, uint64_t> get_rangei (const string &range_string, size_t &i) {
   pair<uint64_t, uint64_t> error_return_value = make_pair (0,0);
-  size_t rnge_string_length = rnge_string.size();
+  size_t range_string_length = range_string.size();
 
-  if (!rnge_string_length) {
+  if (!range_string_length) {
     cerr << "get_rangei: empty range_string" << endl;
     return error_return_value;
   }
 
   bool success = 1;
-  success = skip_char (rnge_string, '[', i);
+  success = skip_char (range_string, '[', i);
 
   if (!success) {
     cerr << "get_rangei: invalid range string" << endl;
@@ -63,18 +63,18 @@ pair<uint64_t, uint64_t> get_rangei (const string &rnge_string, size_t &i) {
   }
 
   size_t processed_chars;
-  unsigned num1 = stoul (rnge_string.substr (i), &processed_chars);
+  unsigned num1 = stoul (range_string.substr (i), &processed_chars);
   i += processed_chars;
-  success = skip_char (rnge_string, '-', i);
+  success = skip_char (range_string, '-', i);
 
   if (!success) {
     cerr << "get_rangei: invalid range string" << endl;
     return error_return_value;
   }
 
-  unsigned num2 = stoul (rnge_string.substr (i), &processed_chars);
+  unsigned num2 = stoul (range_string.substr (i), &processed_chars);
   i += processed_chars;
-  success = skip_char (rnge_string, ']', i);
+  success = skip_char (range_string, ']', i);
 
   if (!success) {
     cerr << "get_rangei: invalid range string" << endl;
@@ -128,4 +128,16 @@ string get_procedure (const string &statement, size_t& index) {
   string subprocedure = statement.substr (index_beg,
                                           index - index_beg + 1);
   return subprocedure;
+}
+
+void  trim_str (string &str) {
+  size_t beg = str.find_first_not_of (" \n\t\r");
+  size_t end = str.find_last_not_of (" \n\t\r") + 1;
+
+  if (beg == string::npos) {
+    beg = 0;
+    end = 0;
+  }
+
+  str = str.substr (beg, end);
 }

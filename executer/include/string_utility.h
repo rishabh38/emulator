@@ -9,5 +9,5 @@ std::pair<uint64_t, uint64_t> get_range (const std::string&);
 std::pair<uint64_t, uint64_t> get_rangei (const std::string&, size_t&);
 std::string get_bitS (const std::string&, size_t&);
 std::string get_procedure (const std::string&, size_t&);
-
+void trim_str (std::string&);
 #endif
