@@ -6,6 +6,7 @@
 #include <cinttypes>
 #include <string>
 
+bool add_reg_alias (std::string alias, std::string bitS);
 bool init_reg (uint16_t total_reg, uint16_t width);
 bool init_mem (uint32_t size, uint16_t width);
 bool insert_reg_bitS (std::string reg_bitS, uint16_t regIndex);

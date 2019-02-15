@@ -19,13 +19,13 @@ static store memory;
 static map<string, uint16_t> reg_bitS_index_map;
 static map<string, string> alias_reg_bitS_map;
 
-/* add_alias (string alias, string bitS): 
+/* add_reg_alias (string alias, string bitS): 
  * takes alias string and bitstring, maps alias
  * string with bitstring in alias_reg_bitS_map.
  * gives WARNING when alias overwritten.
  * always returns true :_>
  */
-bool add_alias (string alias, string bitS) {
+bool add_reg_alias (string alias, string bitS) {
   if (alias_reg_bitS_map.count (alias)) {
     cerr << "WARNING: overwriting mapped register alias" << endl;
   }
