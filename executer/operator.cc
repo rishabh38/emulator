@@ -1,7 +1,7 @@
 #include "executer/include/operator.h"
 
-#include "executer/include/bitS_utility.h"
 #include "executer/include/regmem_access.h"
+#include "utility/include/bitS_utility.h"
 
 #include <iostream>
 #include <map>

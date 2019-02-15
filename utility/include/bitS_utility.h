@@ -6,5 +6,5 @@
 
 uint64_t bitS_to_unum (std::string);
 std::string unum_to_bitS (uint64_t num);
-bool is_bitS (string the_string);
+bool is_bitS (std::string the_string);
 #endif
