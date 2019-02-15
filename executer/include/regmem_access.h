@@ -14,6 +14,5 @@ std::string get_reg_value (std::string reg_bitS);
 std::string get_mem_value (std::string mem_bitS);
 bool insert_reg_value (std::string reg_bitS, std::string bitS);
 bool insert_mem_value (std::string mem_bitS, std::string bitS);
-//void show_memreg(std::string bitS); //test function
 
 #endif

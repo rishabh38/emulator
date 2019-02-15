@@ -295,10 +295,3 @@ bool insert_mem_value (string mem_bitS, string bitS) {
 
   return success;
 }
-  
-
-/*test function:
-void show_memreg (string bitS) {
-  cout << bitS << " : " << reg_bitS[bitS] << endl;
-}
-*/
