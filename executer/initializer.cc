@@ -53,4 +53,13 @@ bool initialize_operators(){
   init_opfuncmap ();
 }
 
-bool initialize_inst_module (/*UPDATE IT*/){}
+bool initialize_inst_module (const string& filename) {
+  bool success = 0;
+  vector<string> inst_modules = read_inst_modules (filename);
+  
+  for (auto inst_module : inst_modules) {
+    success = insert_instruction_module (inst_module);
+  }
+  
+  return success;
+}
