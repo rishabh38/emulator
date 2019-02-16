@@ -53,4 +53,4 @@ bool initialize_operators(){
   init_opfuncmap ();
 }
 
-bool initialize_opcode_statement_map (/*UPDATE IT*/){}
+bool initialize_inst_module (/*UPDATE IT*/){}
