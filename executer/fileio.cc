@@ -1,5 +1,7 @@
 #include "executer/include/fileio.h"
 
+#include "utility/include/string_utility.h"
+
 #include <unistd.h>
 #include <fstream>
 #include <cinttypes>
@@ -169,4 +171,41 @@ vector<vector<string>> read_reg_alias (const string &filename){
   }
 
   return alias_list;
+}
+
+vector<string> read_inst_modules (const string& filename) {
+  vector<string> err_return_value;
+  if (!isfileok (filename)) {
+    cerr << "read_inst_modules: unable to access file " << filename << endl;
+    return err_return_value;
+  }
+
+  uint64_t pos = 0;
+
+  if (!(pos = find_tag (filename, "instruction-module"))) {
+    cerr << "read_reg_alias: unable to find tag \"register-alias\"" << endl;
+    return err_return_value;
+  }
+
+  ifstream file (filename);
+  file.seekg (pos);
+  string str_buffer;
+  vector<string> inst_modules; 
+  
+  while (getline (file, str_buffer, ';')) {
+    stringstream stream_buffer (str_buffer);
+    string word;
+    stream_buffer >> word;
+
+    if (word == "--") {
+      break;
+    }
+
+    if (str_buffer.size()) {
+      trim_str (str_buffer);      
+      inst_modules.push_back (str_buffer);
+    }
+  }
+
+  return inst_modules;
 }

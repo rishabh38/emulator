@@ -10,5 +10,5 @@ using num_pair = std::pair<uint64_t, uint64_t>;
 
 std::pair<num_pair, num_pair> read_regmem_size(const std::string&);
 std::vector<std::vector<std::string>> read_reg_alias (const std::string&);
-
+std::vector<std::string> read_inst_modules (const std::string&);
 #endif
