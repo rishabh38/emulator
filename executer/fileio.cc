@@ -1,6 +1,7 @@
 #include "executer/include/fileio.h"
 
 #include "utility/include/string_utility.h"
+#include "utility/include/bitS_utility.h"
 
 #include <unistd.h>
 #include <fstream>
@@ -220,4 +221,62 @@ vector<string> read_inst_modules (const string& filename) {
   }
 
   return inst_modules;
+}
+
+vector<str_pair> read_reg_values (const string& filename) {
+  vector<str_pair> err_return_value;
+  
+  if (!isfileok (filename)) {
+    cerr << "get_reg_values: unable to access file " << filename << endl;
+    return err_return_value;
+  }
+
+  uint64_t pos = 0;
+
+  if (!(pos = find_tag (filename, "register-value"))) {
+    cerr << "get_reg_values: unable to find tag \"register-value\"" << endl;
+    return err_return_value;
+  }
+
+  ifstream file (filename);
+  file.seekg (pos);
+  string str_buffer;
+  vector<str_pair> reg_values;
+
+  while (getline (file, str_buffer, ';')) {
+    string reg, val;
+    stringstream stream_buffer (str_buffer);
+    string word;
+    stream_buffer >> word;
+
+    if (word == "--") {
+      break;
+    }
+
+    if (word.find ("bits") != string::npos) {
+      string bits = extract_bitS (word);
+      
+      if (!bits.size()) {
+        cerr << "read_reg_values: invalid input " << word << endl;
+        continue;
+      }
+
+      reg = bits;
+    }
+    else if (word.size()) {
+      reg = word;
+    }
+
+    if (stream_buffer >> word && is_bitS (word)) {
+      val = word;
+    }
+    else {
+      cerr << "read_reg_values: invalide input " << word << endl;
+      continue;
+    }
+
+    reg_values.push_back (make_pair (reg, val));
+  }
+
+  return reg_values;
 }
