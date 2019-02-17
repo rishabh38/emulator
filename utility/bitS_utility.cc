@@ -44,7 +44,7 @@ bool is_bitS (string the_string) {
   }
 
   for (size_t i = 0; i < str_length; i++) {
-    if (the_string[i] != '0' || the_string[i] == '1') {
+    if (the_string[i] != '0' && the_string[i] != '1') {
       success = 0;
       break;
     }
