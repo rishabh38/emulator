@@ -12,6 +12,4 @@ bool initialize_regmem (const std::string&);
 bool initialize_operators();
 bool initialize_inst_module (const std::string&);
 
-bool set_regmem_size (std::pair <num_pair, num_pair>);
-bool init_reg_aliases (std::vector<std::vector<std::string>>);
 #endif
