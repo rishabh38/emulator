@@ -1,5 +1,6 @@
 #include "executer/include/initializer.h"
 
+#include "utility/include/bitS_utility.h"
 #include "executer/include/fileio.h"
 #include "executer/include/operator.h"
 #include "executer/include/opcode_matcher.h"
@@ -73,5 +74,26 @@ bool initialize_inst_module (const string& filename) {
     success = insert_instruction_module (inst_module);
   }
   
+  return success;
+}
+
+bool write_opcodes_to_mem (vector<string> opcode_list) {
+  bool success = 1;
+  uint64_t index = 1;
+
+  for (auto opcode : opcode_list) {
+
+    string index_bits = unum_to_bitS (index);
+    success &= insert_mem_value (index_bits, opcode);
+    index++;
+  }
+
+  return success;
+}
+
+bool load_opcodes_to_mem (const string& filename) {
+  bool success = 0;
+  auto opcode_list = read_opcodes (filename);
+  success = write_opcodes_to_mem (opcode_list);
   return success;
 }
