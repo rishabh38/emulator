@@ -7,12 +7,12 @@
 
 using namespace std;
 
-void initialize(const string& filename) {
-  initialize_regmem (filename);
+void initialize(const string& inst_file, const string& opc_file) {
+  initialize_regmem (inst_file);
   initialize_operators();
-  initialize_inst_module (filename);
+  initialize_inst_module (inst_file);
+  load_opcodes_to_mem (opc_file);
 }
-
 
 int main (int argc, char* argv[]) {
   if (argc < 3) {
@@ -20,6 +20,6 @@ int main (int argc, char* argv[]) {
     return 1;
   }
 
-  initialize(argv[1]);
+  initialize(argv[1], argv[2]);
   execute();
 }
