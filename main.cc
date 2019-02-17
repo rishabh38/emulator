@@ -8,16 +8,16 @@
 using namespace std;
 
 void initialize(const string& filename) {
-  bool initialize_regmem (const std::string&);
-  bool initialize_operators();
-  bool initialize_inst_module (const std::string&);
+  initialize_regmem (filename);
+  initialize_operators();
+  initialize_inst_module (filename);
 }
 
 
 int main (int argc, char* argv[]) {
   if (argc < 3) {
     cerr << "usage: main <filename1> <filename2>" << endl;
-    return 0;
+    return 1;
   }
 
   initialize(argv[1]);
