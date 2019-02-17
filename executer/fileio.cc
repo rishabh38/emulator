@@ -13,9 +13,22 @@
 using namespace std;
 
 using num_pair = pair<uint64_t, uint64_t>;
+using str_pair = pair<string, string>;
 
 bool isfileok(const string& filename) {
   return !access (filename.c_str(), F_OK); 
+}
+
+string extract_bitS (const string& bformat) {
+  size_t bits_beg = bformat.find_first_of ("01");
+  size_t bits_end = bformat.find_last_of ("01");
+
+  if (bits_beg == string::npos) {
+    cerr << "extract_bitS: bitstring not found in " << bformat << endl;
+    return "";
+  }
+  
+  return bformat.substr (bits_beg, bits_end - bits_beg + 1);
 }
 
 uint64_t find_tag (const string& filename, const string& tag) {
@@ -82,7 +95,7 @@ pair<num_pair, num_pair> read_regmem_size (const string &filename) {
         stream_buffer >> word >> word;
         mem_count = stoull (word);
       }
-      else cerr << "read_regmem_size: invalid input1" << endl;
+      else cerr << "read_regmem_size: invalid input" << endl;
     }
     else if (word == "width") {
       stream_buffer >> word;
@@ -95,9 +108,9 @@ pair<num_pair, num_pair> read_regmem_size (const string &filename) {
         stream_buffer >> word >> word;
         mem_width = stoull (word);
       }
-      else cerr << "read_regmem_size: invalid input2" << endl;
+      else cerr << "read_regmem_size: invalid input" << endl;
     }
-    else cerr << "read_regmem_size: invalid input3: " << word << endl;
+    else cerr << "read_regmem_size: invalid input " << word << endl;
   }
 
   return make_pair (make_pair(reg_count, reg_width), make_pair (mem_count, mem_width));
@@ -145,16 +158,15 @@ vector<vector<string>> read_reg_alias (const string &filename){
 
     stream_buffer >> word;
 
-    if (!word.find ("bits")) {
-      size_t bits_beg = word.find_first_of ("01");
-      size_t bits_end = word.find_last_of ("01");
-
-      if (bits_beg == 0) {
+    if (word.find ("bits") != string::npos) {
+      string bits = extract_bitS (word);
+      
+      if (!bits.size()) {
         cerr << "read_reg_alias: invalid input " << word << endl;
         continue;
       }
 
-      line.push_back (word.substr (bits_beg, bits_end - bits_beg + 1));
+      line.push_back (bits);
       count++;
     }
     else {
