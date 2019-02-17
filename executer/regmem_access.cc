@@ -101,7 +101,7 @@ bool insert_reg_bitS (string bitS, uint16_t index) {
 string boolAtobitS (bool *boolA, size_t length) {
   if (!length) {
     cerr << "length of bool array is 0" << endl;
-    return " ";
+    return "";
   }
 
   string bitS;
@@ -118,21 +118,21 @@ string boolAtobitS (bool *boolA, size_t length) {
  * returns the value stored in that index of
  * the store object.
  * if index >= total elements of the store, then
- * returns " ",
+ * returns "",
  * else returns store value at that index.
  */
 string get_regmem_value (store regmem, uint64_t index) {
   if (index >= totalElements (regmem)) {
     cerr << "get_regmem_value: register/memory address " << index
          << " doesn't exist" << endl;
-    return " ";
+    return "";
   }
   
   uint16_t regmem_width = storeWidth (regmem);
   bool *boolA = readMultiBitsfromStore (regmem, index, 0, regmem_width);
   string regmem_value = boolAtobitS (boolA, regmem_width);
 
-  if (regmem_value == " "){
+  if (regmem_value == ""){
     cerr << "get_regmem_value: register/memory " << index 
          << " is empty" << endl;
   }
@@ -144,7 +144,7 @@ string get_regmem_value (store regmem, uint64_t index) {
  * takes bitstring/alias mapped to one of the regster
  * index, and returns the value stored in that index,
  * if unable to find the mapped index, then returns
- * " ",
+ * "",
  * else returns regster's stored value.
  */
 string get_reg_value (string reg) {
@@ -191,7 +191,7 @@ uint64_t bitS_to_num (string bitS) {
  * takes bitstring representing memory
  * address and returns value stored in
  * that address of memory if the address
- * exist, else returns " ".
+ * exist, else returns "".
  */
 string get_mem_value (string reg_bitS) {
   uint64_t mem_index = bitS_to_num (reg_bitS);
