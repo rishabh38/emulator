@@ -13,4 +13,5 @@ std::pair<num_pair, num_pair> read_regmem_size(const std::string&);
 std::vector<std::vector<std::string>> read_reg_alias (const std::string&);
 std::vector<str_pair> read_reg_values (const std::string&);
 std::vector<std::string> read_inst_modules (const std::string&);
+std::vector<std::string> read_opcodes (const std::string&);
 #endif

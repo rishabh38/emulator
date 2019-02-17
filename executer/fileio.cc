@@ -280,3 +280,25 @@ vector<str_pair> read_reg_values (const string& filename) {
 
   return reg_values;
 }
+
+vector<string> read_opcodes (const string &filename) {
+  vector<string> err_return_value;
+
+  if (!isfileok (filename)) {
+    cerr << "read_opcode: unable to access file " << filename << endl;
+    return err_return_value;
+  }
+
+  ifstream file (filename);
+  vector<string> opcode_list; 
+  string word;
+
+  while (file >> word) {
+    if (is_bitS (word)) {
+      opcode_list.push_back (word);
+    }
+    else cerr << "read_opcode: unknown input " << word << endl;
+  }
+
+  return opcode_list;
+}
