@@ -31,7 +31,7 @@ bool init_reg_aliases (vector<vector<string>> reg_aliases) {
 
     success = insert_reg_bitS (reg_alias[1], stoull (reg_alias[0]));
 
-    if (reg_alias.size() >= 2) {
+    if (reg_alias.size() >= 3) {
       success = add_reg_alias (reg_alias[2], reg_alias[1]);
     }
   }
@@ -39,13 +39,26 @@ bool init_reg_aliases (vector<vector<string>> reg_aliases) {
   return success;
 }
 
+bool set_reg_values (const vector<pair<string, string>> &reg_vals) {
+  bool success = 1;
+
+  for (auto reg_val : reg_vals) {
+    success &= insert_reg_value (reg_val.first, reg_val.second);
+  }
+
+  return success;
+}
+
 bool initialize_regmem(const string &filename) {
   bool success;
-  pair<num_pair,num_pair> regmem_size = read_regmem_size (filename);
+  auto regmem_size = read_regmem_size (filename);
   success = set_regmem_size (regmem_size);
 
-  vector<vector<string>> reg_aliases = read_reg_alias (filename);
+  auto reg_aliases = read_reg_alias (filename);
   success = init_reg_aliases (reg_aliases); 
+
+  auto reg_val = read_reg_values (filename);
+  success = set_reg_values (reg_val);  
   return success;
 }
 
@@ -56,7 +69,6 @@ bool initialize_operators(){
 bool initialize_inst_module (const string& filename) {
   bool success = 0;
   vector<string> inst_modules = read_inst_modules (filename);
-  
   for (auto inst_module : inst_modules) {
     success = insert_instruction_module (inst_module);
   }
