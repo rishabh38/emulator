@@ -153,8 +153,9 @@ string get_reg_value (string reg) {
   if (alias_reg_bitS_map.count (reg)) {
     reg_bitS = alias_to_reg_bitS (reg);
   }
-  else if (reg_bitS_index_map.count (reg)) {
-    reg_bitS = reg;
+  else if (!reg_bitS_index_map.count (reg)) {
+    cerr << "get_reg_value: register not found" << endl;
+    return "";
   }
 
   uint16_t reg_index = reg_bitS_index_map[reg_bitS];
@@ -259,14 +260,18 @@ bool insert_regmem_value (store regmem, uint64_t index, string bitS) {
  * register and bitstring thats needed to be inserted.
  * returns 0 if unsuccessful, else returns 1.
  */
-bool insert_reg_value (string reg_bitS, string bitS) {
-  if (!reg_bitS_index_map.count (reg_bitS)) {
+bool insert_reg_value (string reg, string bitS) {
+  string reg_bitS = reg;
+
+  if (alias_reg_bitS_map.count (reg)) {
+    reg_bitS = alias_reg_bitS_map[reg];
+  }
+  else if (!reg_bitS_index_map.count (reg)) {
     cerr << "insert_reg_value: invalid register_bitString" << endl;
     return 0;
   }
 
   uint16_t reg_index = reg_bitS_index_map[reg_bitS];
-
   bool success =  insert_regmem_value (regster, reg_index, bitS);
 
   if (!success) {
