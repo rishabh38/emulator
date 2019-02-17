@@ -81,7 +81,7 @@ bool init_mem (uint32_t size, uint16_t width) {
  */
 bool insert_reg_bitS (string bitS, uint16_t index) {
   bool success_code = 1;
-  cout << "sizeofregister: " << totalElements (regster) << endl;
+
   if (index >= totalElements (regster)) {
     index = index % totalElements (regster);
     success_code = 0;
