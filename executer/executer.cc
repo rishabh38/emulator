@@ -10,6 +10,10 @@ using namespace std;
 
 bool do_all_match (const string &str, const char ch) {
   bool success = true;
+  
+  if (!str.size()){
+    success = false;
+  }
 
   for (auto a : str) {
     if (a != ch) {
