@@ -54,6 +54,9 @@ store.o : store.c store.h
 storeutil.o : storeutil.c storeutil.h store.h
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
 
-.PHONY : clean
+.PHONY : clean cleanobj
 clean : 
 	rm $(objects) emulate
+
+cleanobj :
+	rm $(objects)
