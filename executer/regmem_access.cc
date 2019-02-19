@@ -3,6 +3,7 @@
 #include "StoreLib/include/store.h"
 #include "StoreLib/include/storeutil.h"
 
+#include <cstdint>
 #include <cinttypes>
 #include <cmath>
 #include <iostream>
@@ -18,6 +19,32 @@ static store memory;
 
 static map<string, uint16_t> reg_bitS_index_map;
 static map<string, string> alias_reg_bitS_map;
+
+/* dcode_reg_location (string reg):
+ * takes a string representing a register,
+ * i.e. string is alias/bits_index
+ * converts it into index if the mapping
+ * is present in reg_bitS_index_map and 
+ * alias_reg_bitS_map.
+ * Returns UINT16_MAX if mapping isn't present.
+ */
+uint16_t dcode_reg_location (string reg) {
+  uint16_t reg_location = UINT16_MAX;
+  string reg_bitS = reg;
+  
+  if (alias_reg_bitS_map.count (reg)) {
+    reg_bitS = alias_reg_bitS_map[reg];
+  }
+  
+  if (!reg_bitS_index_map.count(reg_bitS)) {
+    cerr << "dcode_reg_location: register " << reg 
+         << " not found" << endl;
+    return reg_location; 
+  }
+
+  reg_location = reg_bitS_index_map[reg_bitS];
+  return reg_location;
+}
 
 /* add_reg_alias (string alias, string bitS): 
  * takes alias string and bitstring, maps alias
@@ -148,19 +175,15 @@ string get_regmem_value (store regmem, uint64_t index) {
  * else returns regster's stored value.
  */
 string get_reg_value (string reg) {
-  string reg_bitS = "";
-
-  if (alias_reg_bitS_map.count (reg)) {
-    reg_bitS = alias_to_reg_bitS (reg);
-  }
-  else if (!reg_bitS_index_map.count (reg)) {
-    cerr << "get_reg_value: register not found" << endl;
+  uint16_t reg_index = dcode_reg_location (reg);
+ 
+  if (reg_index == UINT16_MAX) {
+    cerr << "get_reg_value: unable to find " << reg << " register" 
+         << endl; 
     return "";
   }
 
-  uint16_t reg_index = reg_bitS_index_map[reg_bitS];
   string reg_value = get_regmem_value (regster, reg_index);
-
   return reg_value;
 }
 
@@ -261,22 +284,19 @@ bool insert_regmem_value (store regmem, uint64_t index, string bitS) {
  * returns 0 if unsuccessful, else returns 1.
  */
 bool insert_reg_value (string reg, string bitS) {
-  string reg_bitS = reg;
-
-  if (alias_reg_bitS_map.count (reg)) {
-    reg_bitS = alias_reg_bitS_map[reg];
-  }
-  else if (!reg_bitS_index_map.count (reg)) {
-    cerr << "insert_reg_value: invalid register_bitString" << endl;
-    return 0;
+  uint16_t reg_index = dcode_reg_location (reg);
+ 
+  if (reg_index == UINT16_MAX) {
+    cerr << "get_reg_value: unable to find " << reg << " register" 
+         << endl; 
+    return "";
   }
 
-  uint16_t reg_index = reg_bitS_index_map[reg_bitS];
   bool success =  insert_regmem_value (regster, reg_index, bitS);
 
   if (!success) {
-    cerr << "insert_reg_value: unable to insert value to regster" 
-         << reg_bitS << endl;
+    cerr << "insert_reg_value: unable to insert value to regster " 
+         << bitS << endl;
   }
 
   return success;
