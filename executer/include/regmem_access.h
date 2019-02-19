@@ -15,5 +15,9 @@ std::string get_reg_value (std::string reg);
 std::string get_mem_value (std::string mem_bitS);
 bool insert_reg_value (std::string reg_bitS, std::string bitS);
 bool insert_mem_value (std::string mem_bitS, std::string bitS);
+void disp_reg_status ();
+void disp_mem_status ();
+void display_register (std::string);
+void display_memory (std::string);
 
 #endif

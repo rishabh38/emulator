@@ -1,5 +1,6 @@
 #include "executer/include/regmem_access.h"
 
+#include "utility/include/bitS_utility.h"
 #include "StoreLib/include/store.h"
 #include "StoreLib/include/storeutil.h"
 
@@ -222,6 +223,84 @@ string get_mem_value (string reg_bitS) {
   string mem_value = get_regmem_value (memory, mem_index);
 
   return mem_value;
+}
+
+/* disp_regmem (store STORE, uint64_t index):
+ * takes store object (regster/memory), and index
+ * of store of which value needs to be printed.
+ * gives error when index >= total elements in STORE
+ */
+void disp_regmem (store STORE, uint64_t index) { uint64_t store_width = storeWidth (STORE); 
+  if (index >= totalElements (STORE)) {
+    cerr << "disp_regmem: requested location " << index
+         << " doesn't exist" << endl;
+    return;
+  }
+
+  string bitS = get_regmem_value (STORE, index);
+  cout << "0x" << std::hex << index << " : " 
+       << bitS; 
+}
+
+/* display_register (string reg):
+ * takes register alias/index_bits, and prints
+ * value of the register at that index
+ * gives error when register doesn't exist.
+ */
+void display_register (string reg) {
+  uint16_t reg_index = dcode_reg_location (reg);
+
+  if (reg_index == UINT16_MAX) {
+    cerr << "display_register: unable to find " << reg 
+         << " register" << endl; 
+    return;
+  }
+
+  cout << "register ";
+  disp_regmem (regster, reg_index);
+  cout << "\n";
+}
+
+/* display_memory (string reg):
+ * takes memory index_bits, and prints
+ * value of the memory at that index
+ * gives error when memory doesn't exist.
+ */
+void display_memory (string mem) {
+  uint32_t mem_index = bitS_to_unum (mem);
+  
+  cout << "memory ";
+  disp_regmem (memory, mem_index);
+  cout << "\n";
+}
+
+/* disp_reg_status ():
+ * displays values in all the registers
+ */
+void disp_reg_status () {
+  uint32_t reg_length = storeWidth (regster);
+  cout << "register status************" << endl; 
+ 
+  for (auto reg_bitS : reg_bitS_index_map) {
+    disp_regmem (regster, reg_bitS.second);
+    cout << "\n";
+  }
+
+  cout << "**************************" << endl;
+}
+
+/* disp_mem_status ():
+ * displays all values in the memory
+ */
+void disp_mem_status () {
+  cout << "memory status*************" << endl;
+  uint64_t mem_count = totalElements (memory);
+  uint16_t mem_width = storeWidth (memory);
+
+  for (uint64_t i = 0; i < mem_count; i++) {
+    disp_regmem (memory, i);
+    cout << "\n";
+  }
 }
 
 /* bitStoboolA (string bitS):
