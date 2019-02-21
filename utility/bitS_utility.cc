@@ -1,8 +1,9 @@
 #include "utility/include/bitS_utility.h"
 
-#include <iostream>
 #include <cinttypes>
 #include <cmath>
+#include <cstdint>
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -10,7 +11,7 @@ using namespace std;
 uint64_t bitS_to_unum (string bitS) {
   if (bitS.empty()) {
     cerr << "bitS_to_num: bitstring is empty" << endl;
-    return 0;
+    return UINT64_MAX;
   }
 
   uint64_t number = 0;
