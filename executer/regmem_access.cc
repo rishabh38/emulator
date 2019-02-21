@@ -4,6 +4,7 @@
 #include "StoreLib/include/store.h"
 #include "StoreLib/include/storeutil.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <cinttypes>
 #include <cmath>
@@ -388,13 +389,53 @@ bool insert_reg_value (string reg, string bitS) {
  * register and bitstring thats needed to be inserted.
  * returns 0 if unsuccessful, else returns 1.
  */
-bool insert_mem_value (string mem_bitS, string bitS) {
-  uint64_t mem_index = bitS_to_num (mem_bitS);
+bool insert_mem_valuer (string mem_bitS, string bitS) {
+  uint64_t mem_index = bitS_to_unum (mem_bitS);
   bool success =  insert_regmem_value (memory, mem_index, bitS);
 
   if (!success) {
     cerr << "insert_mem_value: unable to insert value to memory" 
          << mem_bitS << endl;
+  }
+
+  return success;
+}
+
+pair<uint64_t, uint64_t> get_mem_loc (uint64_t addr) {
+  uint64_t total_rows = totalElements (memory);
+  uint64_t row_addr = addr / total_rows;
+  uint64_t col_addr = addr % total_rows;
+  return make_pair (row_addr, col_addr);
+}
+
+bool insert_mem_value (string addr_bin, string bitS) {
+  if (addr_bin.empty()) {
+    cerr << "insert_mem_value: empty address" << endl;
+    return 0;
+  }
+
+  bool success = 1;
+  uint64_t addr = bitS_to_unum (addr_bin);
+
+  if (addr == UINT64_MAX) {
+    cerr << "insert_mem_value: invalide memory address " << addr_bin << endl;
+    return 0;
+  }
+
+  uint16_t mem_width = storeWidth (memory);
+  size_t i = 0;
+  size_t bitS_len_pending = bitS.size();
+  
+  while (bitS_len_pending > 0) {
+    pair<uint64_t, uint64_t> mem_loc = get_mem_loc (addr);
+    uint64_t ava_row_space = mem_width - mem_loc.second;
+    uint64_t len_used = min (bitS_len_pending, ava_row_space);
+    bool *boolA = new bool[len_used];
+    boolA = bitStoboolA (bitS.substr (i, i + len_used));
+    success &= writeMultiBitstoStore (memory, mem_loc.first, mem_loc.second,
+                                      boolA, len_used);
+    i += len_used;
+    bitS_len_pending -= len_used;
   }
 
   return success;
