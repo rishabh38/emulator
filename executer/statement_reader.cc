@@ -166,6 +166,7 @@ string select_and_execute (pair<string, vector<string>> st_operands,
  
   if (operand0.empty()) {
     cerr << "select_and_execute: invalid operator" << endl;
+    return "";
   }
   else if (operand0 == "if") {
     result = execute_if (st_operands, opcode);
@@ -186,7 +187,8 @@ string execute_statement (string statement, string opcode) {
     cerr << "execute_statement: opcode empty" << endl;
     return "err";
   }
-
+  
+  cout << "statement: " << statement << endl;
   pair<string, vector<string>> statement_operands;
   statement_operands = get_statement_operands(statement);
   return select_and_execute (statement_operands, opcode);
