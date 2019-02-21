@@ -214,7 +214,43 @@ pair<uint64_t, uint64_t> get_mem_loc (uint64_t addr) {
   uint64_t col_addr = addr % total_cols;
   return make_pair (row_addr, col_addr);
 }
+
+/* get_mem_valuea (string addr_bin, string length_bin):
+ * takes address in binary, and the number of bits needed to
+ * be read from memory in form of binary, and reads the
+ * requested number of bits from memory.
+ * recommended to use when the value is entered through
+ * insert_mem_valuea to the memory
+ */
+string get_mem_valuea (string addr_bin, string length_bin) { 
+  if (!is_bitS (addr_bin) || !is_bitS (length_bin)) {
+    cerr << "get_mem_value: invalid address " << addr_bin << endl;
+    return "";
+  }
+
+  uint64_t addr = bitS_to_unum (addr_bin);
+  uint64_t length = bitS_to_unum (length_bin);
+  string bitS = "";
+  uint32_t mem_width = storeWidth (memory);
+  size_t len_pending = length;
+
+  while (len_pending > 0 && mem_width) {
+    pair<uint64_t, uint64_t> mem_loc = get_mem_loc (addr);
+    size_t ava_length = mem_width - mem_loc.second;
+    size_t len_used = min (ava_length, len_pending);
+    
+    bool *boolA = new bool[len_used];
+    boolA = readMultiBitsfromStore (memory, mem_loc.first, 
+                                    mem_loc.second, len_used);
+    bitS += boolAtobitS (boolA, len_used);
+   
+    len_pending -= len_used;
+    addr += len_used;
+  }
+
+  return bitS;
 }
+
 /* disp_regmem (store STORE, uint64_t index):
  * takes store object (regster/memory), and index
  * of store of which value needs to be printed.
@@ -378,7 +414,7 @@ bool insert_reg_value (string reg, string bitS) {
  * register and bitstring thats needed to be inserted.
  * returns 0 if unsuccessful, else returns 1.
  */
-bool insert_mem_valuer (string mem_bitS, string bitS) {
+bool insert_mem_value (string mem_bitS, string bitS) {
   uint64_t mem_index = bitS_to_unum (mem_bitS);
   bool success =  insert_regmem_value (memory, mem_index, bitS);
 
