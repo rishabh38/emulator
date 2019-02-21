@@ -63,10 +63,6 @@ bool initialize_regmem(const string &filename) {
   return success;
 }
 
-bool initialize_operators(){
-  init_opfuncmap ();
-}
-
 bool initialize_inst_module (const string& filename) {
   bool success = 0;
   vector<string> inst_modules = read_inst_modules (filename);

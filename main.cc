@@ -9,7 +9,6 @@ using namespace std;
 
 void initialize(const string& inst_file, const string& opc_file) {
   initialize_regmem (inst_file);
-  initialize_operators();
   initialize_inst_module (inst_file);
   load_opcodes_to_mem (opc_file);
 }
