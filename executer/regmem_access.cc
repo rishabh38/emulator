@@ -195,13 +195,26 @@ string get_reg_value (string reg) {
  * that address of memory if the address
  * exist, else returns "".
  */
-string get_mem_value (string reg_bitS) {
-  uint64_t mem_index = bitS_to_num (reg_bitS);
+string get_mem_value (string mem_bitS) {
+  uint64_t mem_index = bitS_to_unum (mem_bitS);
   string mem_value = get_regmem_value (memory, mem_index);
 
   return mem_value;
 }
 
+/* get_mem_loc (uint64_t addr):
+ * takes an integer address for memory, and
+ * returns a pair of integer, denoting calculated
+ * row and column for the given address in memory
+ */
+pair<uint64_t, uint64_t> get_mem_loc (uint64_t addr) {
+  uint64_t total_rows = totalElements (memory);
+  uint64_t total_cols = storeWidth (memory);
+  uint64_t row_addr = addr / total_rows;
+  uint64_t col_addr = addr % total_cols;
+  return make_pair (row_addr, col_addr);
+}
+}
 /* disp_regmem (store STORE, uint64_t index):
  * takes store object (regster/memory), and index
  * of store of which value needs to be printed.
@@ -377,16 +390,14 @@ bool insert_mem_valuer (string mem_bitS, string bitS) {
   return success;
 }
 
-pair<uint64_t, uint64_t> get_mem_loc (uint64_t addr) {
-  uint64_t total_rows = totalElements (memory);
-  uint64_t row_addr = addr / total_rows;
-  uint64_t col_addr = addr % total_rows;
-  return make_pair (row_addr, col_addr);
-}
-
-bool insert_mem_value (string addr_bin, string bitS) {
-  if (addr_bin.empty()) {
-    cerr << "insert_mem_value: empty address" << endl;
+/* insert_mem_valuea (string addr_bin, string bitS):
+ * takes string representing address of memory in binary,
+ * and string representing value to be stored in memory.
+ * returns 1 if the writing process was succesful.
+ */
+bool insert_mem_valuea (string addr_bin, string bitS) {
+  if (!is_bitS (addr_bin)) {
+    cerr << "insert_mem_value: invalid address" << endl;
     return 0;
   }
 
@@ -402,14 +413,17 @@ bool insert_mem_value (string addr_bin, string bitS) {
   size_t i = 0;
   size_t bitS_len_pending = bitS.size();
   
-  while (bitS_len_pending > 0) {
+  while (bitS_len_pending > 0 && mem_width) {
     pair<uint64_t, uint64_t> mem_loc = get_mem_loc (addr);
     uint64_t ava_row_space = mem_width - mem_loc.second;
     uint64_t len_used = min (bitS_len_pending, ava_row_space);
+    
     bool *boolA = new bool[len_used];
     boolA = bitStoboolA (bitS.substr (i, i + len_used));
     success &= writeMultiBitstoStore (memory, mem_loc.first, mem_loc.second,
                                       boolA, len_used);
+    
+    addr += len_used;
     i += len_used;
     bitS_len_pending -= len_used;
   }
