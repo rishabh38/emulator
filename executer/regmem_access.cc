@@ -189,30 +189,6 @@ string get_reg_value (string reg) {
   return reg_value;
 }
 
-/* bitS_to_num (string bitS):
- * takes a bitstring, and returns
- * equivalent unsigned decimal number.
- * treats elements at lowest index as
- * MSB and elements at higher index
- * as LSB.
- * returns 0 if bitstring is empty.
- */
-uint64_t bitS_to_num (string bitS) {
-  if (bitS.empty()) {
-    cerr << "bitS_to_num: bitstring is empty" << endl;
-    return 0;
-  }
-
-  uint64_t number = 0;
-  size_t string_length = bitS.length();
-
-  for (size_t i = 0; i < string_length; i++ ) {
-    number += pow (2,string_length - 1 - i) * (bitS[i] - '0');
-  }
-
-  return number;
-}
-
 /* get_mem_value (string reg_bitS):
  * takes bitstring representing memory
  * address and returns value stored in
