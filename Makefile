@@ -22,13 +22,7 @@ allheaders = executer.h fileio.h initializer.h opcode_matcher.h store.h\
 emulate : $(objects) main.o
 	$(Cpp_compile) $(to_build) $(objects) main.o $(and_nameit) $@
 
-test : $(objects) test.o
-	$(Cpp_compile) $(to_build) $(objects) test.o $(and_nameit) $@
-
 main.o : main.cc $(allheaders)
-	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
-
-test.o : test.cc $(allheaders)
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
 
 executer.o : executer.cc executer.h regmem_access.h opcode_matcher.h
@@ -66,12 +60,9 @@ store.o : store.c store.h
 storeutil.o : storeutil.c storeutil.h store.h
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
 
-.PHONY : clean cleanobj cleante
-cleanem : 
+.PHONY : clean cleanobj
+clean : 
 	rm $(objects) main.o emulate 
-
-cleante :
-	rm $(objects) test.o test
 
 cleanobj :
 	rm $(objects) 
