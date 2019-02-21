@@ -7,5 +7,4 @@
 using opfunc = std::string (std::vector<std::string>);
 
 opfunc *match_operator (std::string operator_name);
-void init_opfuncmap ();
 #endif
