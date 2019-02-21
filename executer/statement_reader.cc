@@ -5,6 +5,7 @@
 #include "utility/include/bitS_utility.h"
 #include "utility/include/string_utility.h"
 
+#include <cstdint>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -97,7 +98,7 @@ string get_bitS_equivalent (string operand, string opcode) {
       return "";
     }
 
-    bitS = opcode.substr (range.first, range.second - range.first + 1);
+    bitS = opcode.substr (range.first, range.second - range.first);
   }
   else {
     bitS = alias_to_reg_bitS (operand);
@@ -115,6 +116,67 @@ vector<string> get_bitS_equivalent (vector<string> operand_list,
   return operand_list;
 }
 
+string execute_if (pair<string, vector<string>> st_operands,
+                  string opcode) {
+  if (st_operands.second.size() < 3) {
+    cerr << "executeif: operand list short" << endl; 
+    return "";
+  }
+
+  string result = "";
+  string cond = get_bitS_equivalent (st_operands.second[0], opcode);
+  uint8_t cond_code = bitS_to_unum (cond);
+
+  switch (cond_code) {
+    case 0 : result = get_bitS_equivalent (st_operands.second[2], opcode);
+             break;
+    case UINT8_MAX : cerr << "executeif: unable to convert condition "
+                          << cond << " to bitstring" << endl;
+                     break;
+    default : result = get_bitS_equivalent (st_operands.second[1], opcode);
+  }
+
+  return result;
+}
+
+string execute_normal (pair<string, vector<string>> st_operands,
+                       string opcode) {
+  if (st_operands.first.empty()) {
+    cerr << "execute_normal: invalid operator" << endl;
+    return "";
+  }
+
+  vector<string> operands = get_bitS_equivalent (st_operands.second, opcode);
+  auto operator_function = match_operator (st_operands.first);
+  
+  if (!operator_function) {
+    cerr << "execute_statement: unable to perform operation "
+         << st_operands.first << endl;
+    return "";
+  }
+ 
+  string result = operator_function (operands);
+  return result;
+}
+
+string select_and_execute (pair<string, vector<string>> st_operands, 
+                           string opcode) {
+  string result = "";
+  string operand0 = st_operands.first;
+ 
+  if (operand0.empty()) {
+    cerr << "select_and_execute: invalid operator" << endl;
+  }
+  else if (operand0 == "if") {
+    result = execute_if (st_operands, opcode);
+  }
+  else {
+    result = execute_normal (st_operands, opcode);
+  }
+
+  return result;
+}
+
 string execute_statement (string statement, string opcode) {
   if (!statement.size()) {
     cerr << "execute_statement: statement empty" << endl;
@@ -126,15 +188,6 @@ string execute_statement (string statement, string opcode) {
   }
 
   pair<string, vector<string>> statement_operands;
-  statement_operands = get_statement_operands (statement);
-  statement_operands.second = get_bitS_equivalent (statement_operands.second, opcode);
-  auto operator_function = match_operator (statement_operands.first);
-
-  if (!operator_function) {
-    cerr << "execute_statement: unable to perform operation "
-         << statement_operands.first << endl;
-    return "";
-  }
-
-  return operator_function (statement_operands.second);
+  statement_operands = get_statement_operands(statement);
+  return select_and_execute (statement_operands, opcode);
 }
