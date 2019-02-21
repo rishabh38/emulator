@@ -9,14 +9,26 @@ and_nameit  = -o
 to_compile = -c
 to_build = 
 
+
+
 objects = executer.o fileio.o initializer.o opcode_matcher.o operator.o \
           regmem_access.o statement_reader.o store.o storeutil.o        \
-          bitS_utility.o string_utility.o main.o
+          bitS_utility.o string_utility.o
 
-emulate : $(objects)
-	$(Cpp_compile) $(to_build) $(objects) $(and_nameit) $@
+allheaders = executer.h fileio.h initializer.h opcode_matcher.h store.h\
+						 operator.h regmem_access.h statement_reader.h storeutil.h \
+						 bitS_utility.h string_utility.h
 
-main.o : main.cc
+emulate : $(objects) main.o
+	$(Cpp_compile) $(to_build) $(objects) main.o $(and_nameit) $@
+
+test : $(objects) test.o
+	$(Cpp_compile) $(to_build) $(objects) test.o $(and_nameit) $@
+
+main.o : main.cc $(allheaders)
+	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
+
+test.o : test.cc $(allheaders)
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
 
 executer.o : executer.cc executer.h regmem_access.h opcode_matcher.h
@@ -54,9 +66,12 @@ store.o : store.c store.h
 storeutil.o : storeutil.c storeutil.h store.h
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
 
-.PHONY : clean cleanobj
-clean : 
-	rm $(objects) emulate
+.PHONY : clean cleanobj cleante
+cleanem : 
+	rm $(objects) main.o emulate 
+
+cleante :
+	rm $(objects) test.o test
 
 cleanobj :
-	rm $(objects)
+	rm $(objects) 
