@@ -9,20 +9,14 @@ and_nameit  = -o
 to_compile = -c
 to_build = 
 
-
-
 objects = executer.o fileio.o initializer.o opcode_matcher.o operator.o \
           regmem_access.o statement_reader.o store.o storeutil.o        \
           bitS_utility.o string_utility.o
 
-allheaders = executer.h fileio.h initializer.h opcode_matcher.h store.h\
-						 operator.h regmem_access.h statement_reader.h storeutil.h \
-						 bitS_utility.h string_utility.h
-
 emulate : $(objects) main.o
 	$(Cpp_compile) $(to_build) $(objects) main.o $(and_nameit) $@
 
-main.o : main.cc $(allheaders)
+main.o : main.cc executer.h initializer.h
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
 
 executer.o : executer.cc executer.h regmem_access.h opcode_matcher.h
