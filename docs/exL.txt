@@ -1,0 +1,41 @@
+execution Language
+-----------------------
+exL is an execution language for representing executions on memory/registers.
+Find the use here: https://github.com/rishabh38/emulator/docs/init.txt
+
+structure of exL is inspired from scheme,
+that is in the form of (operator operand ...)
+
+there can be two types of statements:
+normal statements, conditional statements.
+
+normal statements:
+normal statements can be deduced in the form of
+(operator bitstring bitstring ..).
+that is all of their operands can be converted into bitstring
+
+operators for normal statements:
+uadd, operands for uadd : bitstring1 bitstring2        //returns binary bitstring1 + bitstring2
+regstore, operands for regstore : 'register address in binary' 'bistring to be inserted in register'
+regload, operands for regload : 'register address in binary' 'bistring to be retrieved from register'
+memstore, operands for memstore : 'memory address in binary' 'bistring to be stored in memory'
+memload, operands for memstore : 'memory address in binary' 'bistring to be retrieved from memory'
+
+
+if a statement returns a bitstring, then that statement can be used as bitstring operands.
+infact, things that can be converted into bitstring can be used as bitstring operands.
+
+things that can be converted into bitstring:
+a literal bitstring
+range from a bitstring,
+a statement that returns a bitstring,
+register,  //register and memory are converted into their mapped address in bitstring
+memory,
+
+
+conditional statements:
+conditional statements can be deduced in the form of 
+(if condition bitstring1 bitstring2)
+conditional statements just have different order of evaluation of its operands.
+if condition represents a value other than 0 in binary, then evaluates and returns bitstring1,
+if condition represents a value equal to   0 in binary, then evaluates and returns bitstring2.
