@@ -1,0 +1,8 @@
+range:
+-----
+
+for a bitstring, a range represents a substring from the bitstring within the range
+for a bitstring x: 10000001111111
+range [0-3] will be 100
+
+[x-y] is exclusive at the right side, more like [x,y)
