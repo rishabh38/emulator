@@ -44,5 +44,5 @@ PC 0000000000                //Here, PC represents register,
                              //opcode types for a match, and when found a match,
                              //executes the accompanying statements.
                              //find more about statement formats here:
-                                            https://github.com/rishabh38/emulator/docs/exL
+                                            https://github.com/rishabh38/emulator/docs/exL.txt
 -- 
