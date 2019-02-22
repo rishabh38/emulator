@@ -188,7 +188,6 @@ string execute_statement (string statement, string opcode) {
     return "err";
   }
   
-  cout << "statement: " << statement << endl;
   pair<string, vector<string>> statement_operands;
   statement_operands = get_statement_operands(statement);
   return select_and_execute (statement_operands, opcode);
