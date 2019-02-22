@@ -1,0 +1,48 @@
+layout of init file
+-------------------
+here, '//'represents comment, usually added for better explanation
+
+
+file layout:
+
+[size]                        //[x] represents start of x section
+count register = [number];    //count denotes number of rows for 
+count memory   = [number];    //internal memory/register
+width register = [number];    //width denotes total width of 
+width memory   = [number];    //internal memory/register
+--                            //-- denotes end of last section
+
+[register-alias]
+r0 bits(0000) PC;             //rx represents internal register
+                              //number, while bits(y) represents
+                              //wanted encoding for register no. x
+                              //here PC represents alias for the
+                              //register,
+                              //one can replace PC with any non space
+                              //separated string literal.
+--                              
+
+//***having a PC alias to at least one register is required***
+
+[register-value]             //register-value: used to initialize values
+                             //of internal registers at the start
+PC 0000000000                //Here, PC represents register,
+                             //one can replace PC with any representation
+                             //of register except rx.
+--
+
+[instruction-module]         //instruction-module: section, for expressing the 
+                             //executions needed to take place for a given type 
+                             //of instruction
+[0-2]:10                     //this represents the type of opcode
+(regstore a [0-5]);          //this represents the statement 
+
+                             //each opcode type can map no. of 
+                             //statements, and the last statement for the opcode 
+                             //type should end with ';'
+                             //when the system reads an opcode for execution, it matches all the 
+                             //opcode types for a match, and when found a match,
+                             //executes the accompanying statements.
+                             //find more about statement formats here:
+                                            https://github.com/rishabh38/emulator/docs/exL
+-- 
