@@ -6,7 +6,7 @@ It takes 'init' file to configure how emulator should behave, an 'opcode' file t
 
 Depends on:
 //install these before using
-gflags: github.com/gflags/gflags
+gflags: https://github.com/gflags/gflags
 
 to install:
 $ git clone https://github.com/rishabh38/emulator
