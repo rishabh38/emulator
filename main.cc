@@ -8,6 +8,7 @@
 
 DEFINE_string(opcode,"opcode","file to read opcodes from");
 DEFINE_string(init,"init","file to read initial states from");
+DEFINE_string(dump,"","file to dump the final status of system");
 
 using namespace std;
 
@@ -21,5 +22,5 @@ int main (int argc, char* argv[]) {
   gflags::ParseCommandLineFlags (&argc, &argv, true);
 
   initialize(FLAGS_init, FLAGS_opcode);
-  execute();
+  execute(FLAGS_dump);
 }

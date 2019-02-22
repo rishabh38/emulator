@@ -256,7 +256,8 @@ string get_mem_valuea (string addr_bin, string length_bin) {
  * of store of which value needs to be printed.
  * gives error when index >= total elements in STORE
  */
-void disp_regmem (store STORE, uint64_t index) { uint64_t store_width = storeWidth (STORE); 
+void disp_regmem (store STORE, uint64_t index, ostream& out) { 
+  uint64_t store_width = storeWidth (STORE); 
   if (index >= totalElements (STORE)) {
     cerr << "disp_regmem: requested location " << index
          << " doesn't exist" << endl;
@@ -264,7 +265,7 @@ void disp_regmem (store STORE, uint64_t index) { uint64_t store_width = storeWid
   }
 
   string bitS = get_regmem_value (STORE, index);
-  cout << "0x" << std::hex << index << " : " 
+  out << "0x" << std::hex << index << " : " 
        << bitS; 
 }
 
@@ -273,7 +274,7 @@ void disp_regmem (store STORE, uint64_t index) { uint64_t store_width = storeWid
  * value of the register at that index
  * gives error when register doesn't exist.
  */
-void display_register (string reg) {
+void display_register (string reg, ostream& out) {
   uint16_t reg_index = dcode_reg_location (reg);
 
   if (reg_index == UINT16_MAX) {
@@ -282,9 +283,9 @@ void display_register (string reg) {
     return;
   }
 
-  cout << "register ";
-  disp_regmem (regster, reg_index);
-  cout << "\n";
+  out << "register ";
+  disp_regmem (regster, reg_index, out);
+  out << "\n";
 }
 
 /* display_memory (string reg):
@@ -292,41 +293,43 @@ void display_register (string reg) {
  * value of the memory at that index
  * gives error when memory doesn't exist.
  */
-void display_memory (string mem) {
+void display_memory (string mem, ostream& out) {
   uint32_t mem_index = bitS_to_unum (mem);
   
-  cout << "memory ";
-  disp_regmem (memory, mem_index);
-  cout << "\n";
+  out << "memory ";
+  disp_regmem (memory, mem_index, out);
+  out << "\n";
 }
 
 /* disp_reg_status ():
  * displays values in all the registers
  */
-void disp_reg_status () {
+void disp_reg_status (ostream& out) {
   uint32_t reg_length = storeWidth (regster);
-  cout << "register status************" << endl; 
+  out << "register status************" << endl; 
  
   for (auto reg_bitS : reg_bitS_index_map) {
-    disp_regmem (regster, reg_bitS.second);
-    cout << "\n";
+    disp_regmem (regster, reg_bitS.second, out);
+    out << "\n";
   }
 
-  cout << "**************************" << endl;
+  out << "**************************" << endl;
 }
 
 /* disp_mem_status ():
  * displays all values in the memory
  */
-void disp_mem_status () {
-  cout << "memory status*************" << endl;
+void disp_mem_status (ostream& out) {
+  out << "memory status*************" << endl;
   uint64_t mem_count = totalElements (memory);
   uint16_t mem_width = storeWidth (memory);
 
   for (uint64_t i = 0; i < mem_count; i++) {
-    disp_regmem (memory, i);
-    cout << "\n";
+    disp_regmem (memory, i, out);
+    out << "\n";
   }
+
+  out << "**************************" << endl;
 }
 
 /* bitStoboolA (string bitS):
@@ -441,7 +444,8 @@ bool insert_mem_valuea (string addr_bin, string bitS) {
   uint64_t addr = bitS_to_unum (addr_bin);
 
   if (addr == UINT64_MAX) {
-    cerr << "insert_mem_value: invalide memory address " << addr_bin << endl;
+    cerr << "insert_mem_value: invalide memory address " << addr_bin 
+         << endl;
     return 0;
   }
 

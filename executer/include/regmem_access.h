@@ -3,6 +3,7 @@
 
 #include "StoreLib/include/store.h"
 
+#include <iostream>
 #include <cinttypes>
 #include <string>
 
@@ -17,9 +18,9 @@ std::string get_mem_value (std::string mem_bitS);
 bool insert_reg_value (std::string reg_bitS, std::string bitS);
 bool insert_mem_valuea (std::string addr_bin, std::string bitS);
 bool insert_mem_value (std::string mem_bitS, std::string bitS);
-void disp_reg_status ();
-void disp_mem_status ();
-void display_register (std::string);
-void display_memory (std::string);
+void disp_reg_status (std::ostream& out);
+void disp_mem_status (std::ostream& out);
+void display_register (std::string, std::ostream& out);
+void display_memory (std::string, std::ostream& out);
 
 #endif
