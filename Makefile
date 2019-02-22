@@ -14,7 +14,7 @@ objects = executer.o fileio.o initializer.o opcode_matcher.o operator.o \
           bitS_utility.o string_utility.o
 
 emulate : $(objects) main.o
-	$(Cpp_compile) $(to_build) $(objects) main.o $(and_nameit) $@
+	$(Cpp_compile) $(to_build) $(objects) main.o -lgflags $(and_nameit) $@
 
 main.o : main.cc executer.h initializer.h
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<

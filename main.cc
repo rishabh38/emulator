@@ -1,9 +1,13 @@
 #include "executer/include/executer.h"
 #include "executer/include/initializer.h"
 
+#include <gflags/gflags.h>
 #include <iostream>
 #include <string>
 #include <vector>
+
+DEFINE_string(opcode,"opcode","file to read opcodes from");
+DEFINE_string(init,"init","file to read initial states from");
 
 using namespace std;
 
@@ -14,11 +18,8 @@ void initialize(const string& inst_file, const string& opc_file) {
 }
 
 int main (int argc, char* argv[]) {
-  if (argc < 3) {
-    cerr << "usage: main <filename1> <filename2>" << endl;
-    return 1;
-  }
+  gflags::ParseCommandLineFlags (&argc, &argv, true);
 
-  initialize(argv[1], argv[2]);
+  initialize(FLAGS_init, FLAGS_opcode);
   execute();
 }
