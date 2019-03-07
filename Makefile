@@ -13,6 +13,8 @@ objects = executer.o fileio.o initializer.o opcode_matcher.o operator.o \
           regmem_access.o statement_reader.o store.o storeutil.o        \
           bitS_utility.o string_utility.o
 
+all : emulate opcgen
+
 emulate : $(objects) main.o
 	$(Cpp_compile) $(to_build) $(objects) main.o -lgflags $(and_nameit) $@
 
@@ -55,8 +57,17 @@ storeutil.o : storeutil.c storeutil.h store.h
 	$(Cpp_compile) $(with_headers_at) $(to_compile) $<
 
 .PHONY : clean cleanobj
-clean : 
+
+opcgen : 
+	make -C OpGen; cp OpGen/opcgen ./
+
+clean : clean_emulate clean_opcgen
+
+clean_opcgen :
+	make clean -C OpGen; rm opcgen
+
+clean_emulate : 
 	rm $(objects) main.o emulate 
 
 cleanobj :
-	rm $(objects) 
+	rm $(objects) main.o
