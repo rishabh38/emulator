@@ -1,3 +1,6 @@
 [submodule "StoreLib"]
 	path = StoreLib
 	url = https://github.com/rishabh38/StoreLib
+[submodule "OpGen"]
+	path = OpGen
+	url = git@github.com:rishabh38/OpGen.git
