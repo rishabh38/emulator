@@ -97,7 +97,7 @@ bool is_substr (const string& str, pair<num_pair, string> range_string) {
     return 0;
   }
 
-  if (str.substr (range.first, range.second - range.first) != string_to_match) {
+  if (str.substr (range.first, range.second - range.first + 1) != string_to_match) {
     return 0;
   }
 
