@@ -17,13 +17,13 @@ instruction-module:
 ------------------
 this part describes how the system will change the memory and 
 registers when given a particular machine code
-more: https://github.com/rishabh38/emulator/docs/init.txt
+more: https://github.com/rishabh38/emulator/blob/master/docs/init.txt
 
 init:
 ----
 this sections comprises of multiple modules,
 what these modules have in common is that it setups the memory and registers and ways to access them.
-more: https://github.com/rishabh38/emulator/docs/init.txt
+more: https://github.com/rishabh38/emulator/blob/master/docs/init.txt
  
 There are three modules in the init section 
 1.size
