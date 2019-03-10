@@ -88,4 +88,4 @@ e.g. (add PC (xor 1101001 [4-7]))
 statement, with xor operator will be first executed, and then the operand 
 in the parent statement will be replaced with the result of the xor statement.
 
-Here is the list and detail of all the operators for exL :_____________________
+Here is the list and detail of all the operators for exL: https://github.com/rishabh38/emulator/blob/master/docs/operators.txt
