@@ -1,0 +1,46 @@
+instruction-module:
+------------------
+this module describes how the system will change the state of memory and 
+registers when given a particular machine code
+
+the structure of the instruction-module is defined in the form of pairs of
+bistring format and exL statements
+
+abstractly, it is defined in the form of
+---------------- 
+BitStringFormat
+exLstatements
+----------------
+BitStringFormat specifies how a given bitstring should look like
+or, how different portions of bitstring should look like
+
+here BitStringFormat can be expanded like
+----------------
+B0 B1 B2 B3
+----------------
+where Bi is bitsring portion specifier i.e. it specifies how a portion of 
+bitstring should look like
+
+more specifically Bi should look like
+----------------
+[ri-ri+1]:bits
+----------------
+here ri, ri+1 are non-negative integer, and ri should be greater than equal to ri+1
+bits is a bitstring with length ri+1 - ri + 1
+
+
+model of emulator working on instruction-module:
+emulator stores the information from instruction-module into map structure
+between BitStringFormat and exL statements
+
+emulator takes a machine code, and checks for a match in this structure,
+a match is successful if all the portions pointed in a BitStringFormat
+matches with all those portions of the machine code.
+
+for example, [0-3]:1101 [4-5]:11 [8-10]:110 is a match with 110111011101010
+machine code in the portion separated formed 1101.11.01.110.1010
+
+each bit string format can be mapped with one or more exL statements, and last
+statement ends with a semi-colon ';'.
+
+more about exL: https://github.com/rishabh38/emulator/blob/master/docs/exL.txt

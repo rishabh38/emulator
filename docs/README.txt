@@ -17,7 +17,7 @@ instruction-module:
 ------------------
 this part describes how the system will change the memory and 
 registers when given a particular machine code
-more: https://github.com/rishabh38/emulator/blob/master/docs/init.txt
+more: https://github.com/rishabh38/emulator/blob/master/docs/instruction_module.txt
 
 init:
 ----

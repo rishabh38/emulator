@@ -1,7 +1,5 @@
 layout of init file
 -------------------
-here, '//'represents comment, usually added for better explanation
-
 
 file layout:
 
@@ -22,7 +20,7 @@ r0 bits(0000) PC;             //rx represents internal register
                               //separated string literal.
 --                              
 
-//***having a PC alias to at least one register is required***
+NOTE: there should be a register with PC alias
 
 [register-value]             //register-value: used to initialize values
                              //of internal registers at the start

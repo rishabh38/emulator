@@ -1,41 +1,91 @@
 execution Language
------------------------
-exL is an execution language for representing executions on memory/registers.
-Find the use here: https://github.com/rishabh38/emulator/docs/init.txt
+==================
+exL is a language which can be used to give commands to emulator about how to 
+change register/memory states for a given machine code.
 
-structure of exL is inspired from scheme,
-that is in the form of (operator operand ...)
+exL is composed of combinations
+a combination is a line enclosed in a pair of parenthesis
+each statement contains at least one space-separated string in it.
+e.g. (add PC 1) is a combination
 
-there can be two types of statements:
-normal statements, conditional statements.
-
-normal statements:
-normal statements can be deduced in the form of
-(operator bitstring bitstring ..).
-that is all of their operands can be converted into bitstring
-
-operators for normal statements:
-uadd, operands for uadd : bitstring1 bitstring2        //returns binary bitstring1 + bitstring2
-regstore, operands for regstore : 'register address in binary' 'bistring to be inserted in register'
-regload, operands for regload : 'register address in binary' 'bistring to be retrieved from register'
-memstore, operands for memstore : 'memory address in binary' 'bistring to be stored in memory'
-memload, operands for memstore : 'memory address in binary' 'bistring to be retrieved from memory'
+the first string of each combination describes what needs to be done with other 
+members of the combination. 
+first string of each statement can be called operator.
+all strings other than operator can be called oeprands.
 
 
-if a statement returns a bitstring, then that statement can be used as bitstring operands.
-infact, things that can be converted into bitstring can be used as bitstring operands.
+types of data:
+=============
+data for a statement represents operands.
+following are the things that an operand can be
+1.bitstring
+2.register alias
+3.bitstring portion specifier. i.e. [x-y]
 
-things that can be converted into bitstring:
-a literal bitstring
-range from a bitstring,
-a statement that returns a bitstring,
-register,  //register and memory are converted into their mapped address in bitstring
-memory,
+1.bitstring:
+-----------
+bitstrings are represented by just a string of 0s and 1s, 
+e.g. a statement with bitstring operand:
+(op 10100)
+
+2.register alias:
+----------------
+register alias are represented by just the name of the register alias,
+e.g. a statement with register alias as operand:
+(op PC)
+
+3.bitstring portion specifier:
+-----------------------------
+bitstring portions are represented by [x-y] where x,y are non-negative 
+integer and y is greater than equal to y.
+e.g. a statement with register alias as operand:
+(op [3-8])
+
+Conversion:
+==========
+internally, each of the above operands gets converted into a bitstring.
+the type of operand specifies how it will be converted into a bitstring.
+
+for register alias, operand gets converted by using the bitstring mapped with its
+associated register.
+
+for portion specifier:
+one information before describing how portion specifier is converted,
+every statement is associated with a bitstring which is actually a machine code.
+
+so portion specifier is converted to bitstring by getting the portion of 
+machine code being specified by the portion specifier.
 
 
-conditional statements:
-conditional statements can be deduced in the form of 
-(if condition bitstring1 bitstring2)
-conditional statements just have different order of evaluation of its operands.
-if condition represents a value other than 0 in binary, then evaluates and returns bitstring1,
-if condition represents a value equal to   0 in binary, then evaluates and returns bitstring2.
+Execution:
+=========
+how a statement will be executed depends on the operator of the statement
+there are two types of operators:
+1. Non-conditional
+2. Condition
+
+1. Non-conditional operators:
+   -------------------------
+   These operators apply same sequence of execution for each of their operands
+   e.g. statement with non-conditional operator
+        (add 100 10)
+        this statement will convert 100 and 10 into integer and add both of
+        them and returns the result as binary string.
+   These operators can be added/removed or modified in the operator.cc file.
+
+2. Conditional operators:
+   ---------------------
+   These operators execute one of the third, fourth operand selectively based on
+   the value of the first operand.
+   if the first operand evaluates to 1, then third operand will be executed else
+   fourth operand will be executed.
+   e.g. (if [0-0] (add PC 1) (add PC 110))
+
+Each statement returns a string, some statement returns an empty string, other
+returns a bitstring, so this return value of a statement can be used as oeprand
+for another statement.
+e.g. (add PC (xor 1101001 [4-7]))
+statement, with xor operator will be first executed, and then the operand 
+in the parent statement will be replaced with the result of the xor statement.
+
+Here is the list and detail of all the operators for exL :_____________________
