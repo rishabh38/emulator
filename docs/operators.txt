@@ -1,0 +1,40 @@
+Operators:
+=========
+These are the operators that can be used in a statement, all of these operators
+are non-conditional operators i.e. it will evaluate all of their operands
+first, and then execute the statements.
+
+NOTE: This list may grow with time
+
+uadd:
+----
+input: two bitstrings
+converts both the bitstrings into unsigned (uint64_t) integers.
+adds both the integers
+converts the result into bitstring
+returns the bitstring
+
+
+regstore:
+--------
+input: two bitstrings
+puts second bitstring into the register pointed to by the first bitstring.Returns empty string.
+
+
+regload:
+-------
+input: one bitstring
+reads and returns the bitstring present in the register pointed to by
+the first bitstring.
+
+memstore:
+--------
+input: two bitstrings
+writes the second bitstring into the virtual memory location being
+pointed to by first bitstring.
+
+memload:
+-------
+input: two bitstring
+reads and returns the bitstring of length represented by second bitstring
+from the virtual memory address pointed to by first bitstring.
